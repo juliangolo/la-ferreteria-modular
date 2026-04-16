@@ -1,28 +1,23 @@
-// Este es el catalago de la ferretería
-const stock = {
-    'VAL-001': {nombre: 'Válvula de Gas 1/2', cantidad: 10},
-    'TUB-050': {nombre: 'Tubo Cobre 15mm', cantidad: 2}
-};
+// 1. El almacén es una LISTA de cajas (Array de Objetos)
+const productos = [
+    { codigo: 'VAL-001', nombre: 'Válvula de Gas 1/2', cantidad: 10, temperatura: 18 },
+    { codigo: 'TUB-050', nombre: 'Tubo Cobre 15mm', cantidad: 2, temperatura: 25 },
+    { codigo: 'DIS-001', nombre: 'Disolvente Pro', cantidad: 10, temperatura: 25 }
+];
 
-// Necesitamos que esta función pueda ser usada desde fuera de este archivo.
- export async function consultaStock(codigo) {
-
+export function consultaStock(codigo) {
     console.log(`Buscando ${codigo} en las estanterias...`);
 
     return new Promise((resolve, reject) => {
-
-        // Simulamos que tardamos 2 segundos en ir a buscar la pieza
         setTimeout(() => {
-            const producto = stock[codigo];
+            // 2. Buscamos en la lista el producto que coincida con el código.
+            const productoEncontrado = productos.find(p => p.codigo === codigo);
 
-            if (producto) {
-                // ¿resolvemos la promesa entregando el producto.                
-                resolve(producto);
+            if (productoEncontrado) {
+                resolve(productoEncontrado); // Entregamos la mercancía 
             } else {
-                // Rechazamos la promesa para avisar del fallo.
-                reject('Error: Producto no encontrado en el catálago');
+                reject('Error: Producto no encontrado'); // Avisamos del fallo
             }
         }, 2000);
     });
-    
 }

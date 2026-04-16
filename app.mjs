@@ -1,37 +1,35 @@
 // 1. Conectamos la tubería principal que viene del almacén (nuestro archivo propio)
 import  chalk  from 'chalk';
 import { consultaStock } from './inventario.mjs';
-
 // 2. Sacamos de la caja de herramientas nativa el componente para montar sensores
 import {EventEmitter} from 'events';
 
 // 3. Instalamos el cuadro de alarmar (instanciamos el objeto)
-const sensorFerreteria = new EventEmitter();
+const monitorAlmacen = new EventEmitter();
 
 // 4. Este método registra un oyente para una ÚNICA ejecución.
-sensorFerreteria.once('stock_bajo', (producto) => {
+monitorAlmacen.on('fuego', (prod) => {
 
     // Esto es lo que suena en el taller cuando salta la alarma
-    console.log(chalk.red.bold(`¡AVISO DE UN SOLO USO! El stock de${producto.nombre} ha bajado de 5 unidades.`));
-    console.log('Este sensor se ha desactivado automáticamente tras el primer aviso.');
-
+    console.log(chalk.white.bgRed.bold(`¡PELIGRO! El producto ${prod.nombre} está a ${prod.temperatura} grados.`));
 });
 
 // 5. Para probarlo, vamos a forzar dos lecturas seguidas.
-async function probarSensor() {
+async function chequearClima(codigo) {
     try {
         // Primera lectura_ debería disparar la alarma
-        const p1 = await consultaStock('TUB-050');
-        if (p1.cantidad < 5) sensorFerreteria.emit('stock_bajo', p1);
+        const item = await consultaStock(codigo);
+        console.log(`Temperatura actual de ${item.nombre}: ${item.temperatura}°C`);
 
-        // Segunda lectura: aunque el stock siga bajo, la alarma No debería sonar.
-        const p2 = await consultaStock('TUB-050');
-        if (p2.cantidad < 5) sensorFerreteria.emit('stock_bajo', p2);
+        // Si la temperatura es mayor de 40, dispara la señal 'fuego'
+        if (item.temperatura > 20) {
+            monitorAlmacen.emit('fuego', item);
+        }
 
     } catch (error) {
-        console.error('Fallo en la línea de suministro:', error);
+        console.error('Error en el termómetro:', error);
     }
 }
 
 // Le damos al botón de encendido general
-probarSensor();
+chequearClima('DIS-001');   
