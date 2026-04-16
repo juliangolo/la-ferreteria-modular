@@ -7,34 +7,30 @@ import {EventEmitter} from 'events';
 // 3. Instalamos el cuadro de alarmar (instanciamos el objeto)
 const sensorFerreteria = new EventEmitter();
 
-// 4. Conectamos la sirena. Queremos que el aviso quede activado para siempre.
-sensorFerreteria.on('stock_bajo', (producto) => {
+// 4. Este método registra un oyente para una ÚNICA ejecución.
+sensorFerreteria.once('stock_bajo', (producto) => {
 
     // Esto es lo que suena en el taller cuando salta la alarma
-    console.log(`¡ALERTA! El stock de ${producto.nombre} ha bajado a ${producto.cantidad}`);
+    console.log(`¡AVISO DE UN SOLO USO! El stock de${producto.nombre} ha bajado de 5 unidades.`);
+    console.log('Este sensor se ha desactivado automáticamente tras el primer aviso.');
 
 });
 
-// 5. Encendemos la máquina y esperamos a que vuelva el operario del almacén
-async function iniciarJornada() {
+// 5. Para probarlo, vamos a forzar dos lecturas seguidas.
+async function probarSensor() {
     try {
-        // Pausamos la línea de ejecución de esta tarea hasta que nos traigan la pieza.
-        const producto = await consultaStock('TUB-050');
+        // Primera lectura_ debería disparar la alarma
+        const p1 = await consultaStock('TUB-050');
+        if (p1.cantidad < 5) sensorFerreteria.emit('stock_bajo', p1);
 
-        console.log(`Hemos tráido del almacén: ${producto.nombre} - Cantidad: ${producto.cantidad}`);
+        // Segunda lectura: aunque el stock siga bajo, la alarma No debería sonar.
+        const p2 = await consultaStock('TUB-050');
+        if (p2.cantidad < 5) sensorFerreteria.emit('stock_bajo', p2);
 
-        // 6. Comprobamos la presión (vamos a suponer que la alarma salta si hay menos de 5)
-        if (producto.cantidad < 5) {
-            
-            // ¡Peligro! El sensor ha detectado una caída de presión.
-            sensorFerreteria.emit('stock_bajo', producto);
-        }
     } catch (error) {
         console.error('Fallo en la línea de suministro:', error);
-    
     }
-    
 }
 
 // Le damos al botón de encendido general
-iniciarJornada();
+probarSensor();
