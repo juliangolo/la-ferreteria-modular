@@ -32,7 +32,7 @@ async function chequearClima(codigo) {
 }
 
 // Le damos al botón de encendido general
-chequearClima('DIS-001');   */
+chequearClima('DIS-001');   
 
 import { sensorGas, detectarFuga } from './gas.mjs';
 import chalk from 'chalk';
@@ -41,4 +41,8 @@ sensorGas.on('fuga_detectada', (info) => {
     console.log(chalk.yellow(`¡ATENCION! Fuga en ${info.zona}. Nivel actual: ${info.nivel}`));
 });
 
-detectarFuga(60); 
+detectarFuga(60); */
+import { miMartillo, miTornillo } from "./herramientas.mjs";
+
+console.log('He recibido esta herramienta y este tornillo del almacén:');
+console.log(miMartillo, 'y', miTornillo);
