@@ -1,4 +1,5 @@
 // 1. Conectamos la tubería principal que viene del almacén (nuestro archivo propio)
+import  chalk  from 'chalk';
 import { consultaStock } from './inventario.mjs';
 
 // 2. Sacamos de la caja de herramientas nativa el componente para montar sensores
@@ -11,7 +12,7 @@ const sensorFerreteria = new EventEmitter();
 sensorFerreteria.once('stock_bajo', (producto) => {
 
     // Esto es lo que suena en el taller cuando salta la alarma
-    console.log(`¡AVISO DE UN SOLO USO! El stock de${producto.nombre} ha bajado de 5 unidades.`);
+    console.log(chalk.red.bold(`¡AVISO DE UN SOLO USO! El stock de${producto.nombre} ha bajado de 5 unidades.`));
     console.log('Este sensor se ha desactivado automáticamente tras el primer aviso.');
 
 });
