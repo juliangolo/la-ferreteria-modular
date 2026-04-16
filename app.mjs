@@ -1,4 +1,4 @@
-// 1. Conectamos la tubería principal que viene del almacén (nuestro archivo propio)
+/* 1. Conectamos la tubería principal que viene del almacén (nuestro archivo propio)
 import  chalk  from 'chalk';
 import { consultaStock } from './inventario.mjs';
 // 2. Sacamos de la caja de herramientas nativa el componente para montar sensores
@@ -32,4 +32,13 @@ async function chequearClima(codigo) {
 }
 
 // Le damos al botón de encendido general
-chequearClima('DIS-001');   
+chequearClima('DIS-001');   */
+
+import { sensorGas, detectarFuga } from './gas.mjs';
+import chalk from 'chalk';
+
+sensorGas.on('fuga_detectada', (info) => {
+    console.log(chalk.yellow(`¡ATENCION! Fuga en ${info.zona}. Nivel actual: ${info.nivel}`));
+});
+
+detectarFuga(60); 
