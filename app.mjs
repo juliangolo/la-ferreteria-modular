@@ -1,3 +1,13 @@
+// 1. Importamos la caja de Herramientas.
+import { cajaDeHerramientas } from "./herramientas.mjs";
+
+console.log('Voy a sacar la herramienta número 3 de la lista(que es la llave inglesa):');
+
+// 2. Sacamos la llave
+console.log(cajaDeHerramientas[2]);
+
+
+
 /* 1. Conectamos la tubería principal que viene del almacén (nuestro archivo propio)
 import  chalk  from 'chalk';
 import { consultaStock } from './inventario.mjs';
@@ -41,8 +51,8 @@ sensorGas.on('fuga_detectada', (info) => {
     console.log(chalk.yellow(`¡ATENCION! Fuga en ${info.zona}. Nivel actual: ${info.nivel}`));
 });
 
-detectarFuga(60); */
+detectarFuga(60); 
 import { miMartillo, miTornillo } from "./herramientas.mjs";
 
 console.log('He recibido esta herramienta y este tornillo del almacén:');
-console.log(miMartillo, 'y', miTornillo);
+console.log(miMartillo, 'y', miTornillo); */
