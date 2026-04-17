@@ -1,4 +1,29 @@
-// 1. Importamos la caja de Herramientas.
+import { catalago } from './herramientas.mjs';
+// 1. Traemos la máquina registradora del nuevo archivo
+import { calcularTotal } from './cajaRegistradora.mjs';
+
+console.log('Atendiendo al cliente...');
+const cajaEncontrada = catalago.find(item => item.nombre === 'Sierra');
+
+// 2. El cliente pide 3 unidades. Metemos la materia prima en la máquina
+const aPagar = calcularTotal(cajaEncontrada.precio, 3);
+
+// console.log('¡Caja encontrada!');
+// console.log(cajaEncontrada);
+
+console.log('El cliente tiene que pagar: ' + aPagar + ' euros');
+
+/* import { cajaDeHerramientas } from "./herramientas.mjs";
+
+console.log('Buscando la Sierra en el almacén de 1000 piezas...');
+
+// creamos una constante para guardar lo que encuentre el buscador
+const resultado = cajaDeHerramientas.find(item => item === 'Sierra');
+
+console.log('El buscador ha devuelto:');
+console.log(resultado);
+
+1. Importamos la caja de Herramientas.
 import { cajaDeHerramientas } from "./herramientas.mjs";
 
 console.log('Voy a sacar la herramienta número 3 de la lista(que es la llave inglesa):');
@@ -6,9 +31,7 @@ console.log('Voy a sacar la herramienta número 3 de la lista(que es la llave in
 // 2. Sacamos la llave
 console.log(cajaDeHerramientas[2]);
 
-
-
-/* 1. Conectamos la tubería principal que viene del almacén (nuestro archivo propio)
+1. Conectamos la tubería principal que viene del almacén (nuestro archivo propio)
 import  chalk  from 'chalk';
 import { consultaStock } from './inventario.mjs';
 // 2. Sacamos de la caja de herramientas nativa el componente para montar sensores
