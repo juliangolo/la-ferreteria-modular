@@ -33,27 +33,38 @@ async function venderYGuardar(nombreHerramienta) {
     }
 }
 
-// --- LA NOVEDAD: EL MOSTRADOR INTERACTIVO ---
+// --- LA NOVEDAD: EL MOSTRADOR INFINITO ---
 async function abrirMostrador() {
-    
+
     console.log("------------------------------------------");
     console.log('👋 Bienvenido a Ferretería Julián ');
     console.log("------------------------------------------");
 
-    // HUECO 1: La palabra clave para obligar a Node a ESPERAR a que tecleemos
-    const respuestaUsuario = await teclado.question('¿Qué herramienta quieres vender hoy?: ');
+    // HUECO 1: La palabra en inglés para "MIENTRAS" (empieza por w).
+    // Al poner (true). le decimos que este bucle es infinito hasta que le digamos lo contrario.
+    while(true) {
 
-    console.log('\nProcesando la venta de: ' + respuestaUsuario + '...');
+        // Atendemos al cliente
+        const respuestaUsuario = await teclado.question("\n¿Qué herramienta quieres vender? (o escribe 'salir' para cerrar): ");
 
-    // HUECO 2: Llamamos a la máquina de arriba yt le metemos lo que ha escrito el usario
+        // 🛡️ El botón de apagado de emergencia del jefe
+        if (respuestaUsuario === 'salir') {
+            console.log("Cerrando la persina. ¡Buen trabajo hoy, Julián!");
+            
+            //  HUECO 2: La palabra mágica en inglés para "ROMPER" un bucle (empieza por b)
+            break;
+    }
+
+    console.log("Procesando la venta de: " + respuestaUsuario + "...");
     await venderYGuardar(respuestaUsuario);
 
-    // HUECO 3: Cuando terminamos, hay que apagar el "microfono" o la terminal se quedará pillada para siempre.
-    // Pista: la palabra inglesa para "cerrar" (empieza por c)
+    // Cuando termina de vender, como está dentro del bucle, volverá arriba y hará la pregunta otra vez.
+    } 
+    
+    // El micrófono solo se apaga si rompemos el bucle y llegamos hasta aquí abajo
     teclado.close();
 }
 
-// 3. Abrimos la persiana
 abrirMostrador();
 
 
