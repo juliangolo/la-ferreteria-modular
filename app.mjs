@@ -17,7 +17,7 @@ async function gestionarInventario(accion, nombreHerramienta) {
         if (cajaEncontrada === undefined) {
             console.log("❌ Lo siento, no tenemos: '" + nombreHerramienta + "' en el catalago.");
             return;
-        }
+        }   
 
         // --- LA TOMA DE DECISIONES ---
         // HUECO 1: Si la acción es exactamente "vender"...
@@ -47,10 +47,26 @@ async function gestionarInventario(accion, nombreHerramienta) {
         } catch (error) {
             console.log("❌ Error en el almacén:", error.message);
         
-        }    
-    }        
+        }   
+    }
+        
+        // --- LA NUEVA MÁQUINA: EL INPECTOR ---
+        async function mostrarInventario() {
+            try {
+                const textoLeido = await fs.readFile('./inventario.json', 'utf-8');
+                const cajas = JSON.parse(textoLeido);
 
-    // 2. EL MOSTRADOR
+                console.log("\n📦 ESTADO ACTUAL DEL ALMACÉN 📦");
+
+                // HUECO 1: Usa la nueva herramienta mágica de la consola para dibujar la tabla de  'cajas'
+                console.table(cajas);
+                
+            } catch (error) {
+                console.log("❌ Error al leer el almacén:", error.message);
+            }
+        }
+            
+    // 2. EL MOSTRADOR ACTUALIZADO
     async function abrirMostrador() {
         console.log("=======================================");
         console.log("👋 Almacén Centra Ferreterías Julian");
@@ -58,19 +74,28 @@ async function gestionarInventario(accion, nombreHerramienta) {
     
         while (true) {
             // Primera pregunta: ¿Qué hacemos?
-        const respuestaAccion = await teclado.question("\n¿Qué deseas hacer? (vender / reponer / salir); ");
+        const respuestaAccion = await teclado.question("\n¿Qué deseas hacer? (vender / reponer / ver / salir); ");
 
         if (respuestaAccion === "salir") {
             console.log("Cerrando la persiana. ¡Buen trabajo hoy, Julián!");
             break;
+
+            // HUECO 3: Comprobamos si el usuario ha escrito "ver"
+            } else if (respuestaAccion === "ver") {
+                
+                // Llamamos al inspector que acabamos de crear arriba
+                await mostrarInventario();
+
+            } else if (respuestaAccion === "vender" || respuestaAccion === "reponer") {
+                
+                // Solo le pedimos la herramienta si la acción es vender o reponer
+                const respuestaHerramienta = await teclado.question("¿Qué herramienta?; ");
+                await gestionarInventario(respuestaAccion, respuestaHerramienta);
+        
+            } else {
+                console.log("❌ Acción no reconocida.");
+            }
         }
-
-        // Segunda pregunta: ¿A qué herramientas se lo hacemos?
-        const respuestaHerramienta = await teclado.question("¿Qué herramienta?; ");
-
-        // Metemos las DOS respuestas del usuario en la máquina
-        await gestionarInventario(respuestaAccion, respuestaHerramienta);
-    }
 
     teclado.close();
 }
