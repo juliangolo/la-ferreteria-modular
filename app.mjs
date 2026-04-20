@@ -1,27 +1,27 @@
-// 1. Importamos la herramienta de Node para leer archivos de forma asíncrona
 import fs from 'fs/promises';
 
-// 2. Nuestra función encargada de ir al disco duro
-async function abrirBaseDeDatos() {
+async function venderYGuardar(nombreHerramienta) {
+    try { 
+        const textoLeido = await fs.readFile('./inventario.json', 'utf-8');
+        const cajas = JSON.parse(textoLeido);
 
-    try {
-      console.log("PASO 1: Yendo al archivo inventario.json...");
+        const cajaEncontrada = cajas.find(item => item.nombre === nombreHerramienta);
+        cajaEncontrada.stock = cajaEncontrada.stock - 1;
 
-      const textoDelArchivo = await fs.readFile('./inventario.json', 'utf-8');
+        console.log('✅ Venta realizada. Nuevo stock de ' + nombreHerramienta + ': ' + cajaEncontrada.stock);
 
-      const cajas = JSON.parse(textoDelArchivo);
+        const textoParaGuardar = JSON.stringify(cajas, null, 2);
+        
+        await fs.writeFile('./inventario.json' , textoParaGuardar);
 
-      console.log("PASO 2: ¡Lectura existosa! Tenemos " + cajas.length + " tipos de herramientas.");
-      console.log(cajas[0]);
+        console.log ('💾 ¡Cambios guardados en el disco duro permanentemente!');
 
-}
-
-    catch (error) {
-        console.log('❌ ERROR CRÍTICO: No he podido leer el archivo. ¿Seguro que existe?');
-        console.log(error.message);
+    } catch (error) {
+        console.log('❌ Error en la. operación:', error.message);
     }
 }
 
-abrirBaseDeDatos();
+venderYGuardar('Martillo');
+
 
     
