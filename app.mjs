@@ -6,7 +6,7 @@ const teclado = readline.createInterface({
     output: process.stdout
 });
 
-// 1. LA MÁQUINA MEJORADA: Ahora recibe DOS materias primas
+// 1. LA MÁQUINA DE VENDER Y REPONER (Intacta)
 async function gestionarInventario(accion, nombreHerramienta) {
     try {
         const textoLeido = await fs.readFile('./inventario.json', 'utf-8');
@@ -65,7 +65,36 @@ async function gestionarInventario(accion, nombreHerramienta) {
                 console.log("❌ Error al leer el almacén:", error.message);
             }
         }
-            
+
+    // ---------------------------------------------------------------------
+    // LA NUEVA MÁQUINA: EL CREADOR DE CAJAS
+    // ---------------------------------------------------------------------
+    async function crearHerramienta(nombreNuevo, precioNuevo, stockNuevo) {
+        try {
+            const  textoLeido = await fs.readFile('./inventario.json', 'utf-8');
+            const cajas = JSON.parse(textoLeido);
+
+            // Fabricamos la caja nueva con los datos que han entrado en la máquina
+            const nuevaCaja = {
+                nombre: nombreNuevo,
+                precio: precioNuevo,
+                stock: stockNuevo
+            };
+
+            // HUECO 1: Usamos la herramienta en inglés para "empujar" la nueva caja dentro de la lista 'cajas'
+            cajas.push(nuevaCaja);
+
+            // Guardamos los cambios
+            const textoParaGuardar = JSON.stringify(cajas, null, 2);
+            await fs.writeFile('./inventario.json', textoParaGuardar);
+
+            console.log("✨ ¡Nueva herramienta '" + nombreNuevo + "' añadida al catálogo con éxito!");
+
+        } catch (error) {
+            console.log("❌ Error al crear la caja:", error.message);
+        }
+    }
+
     // 2. EL MOSTRADOR ACTUALIZADO
     async function abrirMostrador() {
         console.log("=======================================");
@@ -74,7 +103,7 @@ async function gestionarInventario(accion, nombreHerramienta) {
     
         while (true) {
             // Primera pregunta: ¿Qué hacemos?
-        const respuestaAccion = await teclado.question("\n¿Qué deseas hacer? (vender / reponer / ver / salir); ");
+        const respuestaAccion = await teclado.question("\n¿Qué deseas hacer? (vender / reponer / ver / añadir / salir); ");
 
         if (respuestaAccion === "salir") {
             console.log("Cerrando la persiana. ¡Buen trabajo hoy, Julián!");
@@ -85,6 +114,18 @@ async function gestionarInventario(accion, nombreHerramienta) {
                 
                 // Llamamos al inspector que acabamos de crear arriba
                 await mostrarInventario();
+
+            // Si el usuario teclea exactamente la palabra meter algo nuevo...
+            } else if (respuestaAccion === "añadir") {
+                
+                // Hacemos las 3 preguntas seguidas
+                const resNombre = await teclado.question("Nombre de la herramienta: ");
+                const resPrecio = await teclado.question("Precio (en euros): ");  
+                const resStock = await teclado.question("Cantidad inicial en el almacén: ");
+
+                // Llamamos a la máquina nueva usando Number() para convertir los textos en números
+                await crearHerramienta(resNombre, Number(resPrecio), Number(resStock));
+
 
             } else if (respuestaAccion === "vender" || respuestaAccion === "reponer") {
                 
